@@ -1,0 +1,95 @@
+
+import React, { useEffect, useState } from 'react';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import Auth from './pages/Auth';
+import Dashboard from './pages/Dashboard';
+import Vendors from './pages/Vendors';
+import Bills from './pages/Bills';
+import Stock from './pages/Stock';
+import Masters from './pages/Masters';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
+import Purchases from './pages/Purchases';
+import DutiesTaxes from './pages/DutiesTaxes';
+import Companies from './pages/Companies';
+import SplashScreen from './components/SplashScreen';
+import { getActiveCompanyId } from './utils/helpers';
+import { supabase } from './lib/supabase';
+
+const App = () => {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [isSplashExiting, setIsSplashExiting] = useState(false);
+  const [activeCompanyId, setActiveCompanyId] = useState(getActiveCompanyId());
+
+  useEffect(() => {
+    // 1. Initial Session Check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    // 2. Auth State Subscription
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setActiveCompanyId(getActiveCompanyId());
+    });
+
+    // 3. Splash Timer
+    const splashTimer = setTimeout(() => {
+      setIsSplashExiting(true);
+      setTimeout(() => {
+        setShowSplash(false);
+      }, 700);
+    }, 3000);
+
+    const handleSettingsChange = () => {
+      setActiveCompanyId(getActiveCompanyId());
+    };
+
+    window.addEventListener('appSettingsChanged', handleSettingsChange);
+    
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(splashTimer);
+      window.removeEventListener('appSettingsChanged', handleSettingsChange);
+    };
+  }, []);
+
+  if (showSplash) return <SplashScreen isExiting={isSplashExiting} />;
+
+  if (loading) return (
+    <div className="h-screen w-screen flex items-center justify-center bg-white">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  );
+
+  return (
+    <Router>
+      <div className="animate-in fade-in duration-1000">
+        <Routes>
+          <Route path="/auth" element={!session ? <Auth /> : <Navigate to="/companies" replace />} />
+          <Route path="/companies" element={session ? <Companies /> : <Navigate to="/auth" replace />} />
+          
+          <Route path="/" element={session ? (activeCompanyId ? <Layout /> : <Navigate to="/companies" replace />) : <Navigate to="/auth" replace />}>
+            <Route index element={<Dashboard />} />
+            <Route path="masters" element={<Masters />} />
+            <Route path="purchases" element={<Purchases />} />
+            <Route path="bills" element={<Bills />} />
+            <Route path="vendors" element={<Vendors />} />
+            <Route path="duties-taxes" element={<DutiesTaxes />} />
+            <Route path="stock" element={<Stock />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;
