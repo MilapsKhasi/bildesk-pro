@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import Logo from '../components/Logo';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +24,6 @@ const Auth = () => {
         const { error, data } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         
-        // Immediate navigation if session is active
         if (data.session) {
           navigate('/companies', { replace: true });
         }
@@ -35,25 +33,22 @@ const Auth = () => {
           password,
           options: {
             data: {
-              name: email.split('@')[0] // Basic default name
+              name: email.split('@')[0]
             }
           }
         });
         
         if (error) throw error;
         
-        // When 'Confirm Email' is disabled in Supabase dashboard, 
-        // a session is returned immediately.
         if (data.session) {
           navigate('/companies', { replace: true });
         } else {
           setSuccessMsg('Account created successfully! You can now log in.');
           setIsLogin(true);
-          setPassword(''); // Clear password for security after registration
+          setPassword('');
         }
       }
     } catch (err: any) {
-      // Clean up common error messages if needed, but display primary error
       setError(err.message || 'Authentication failed');
     } finally {
       setLoading(false);
@@ -62,16 +57,18 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-[#f9f9f9] flex items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-sm bg-[#ffea79] rounded-[15px] p-2 animate-in zoom-in-95 duration-700 border border-slate-200/20 shadow-none">
+      <div className="w-full max-w-sm bg-[#79ebff] rounded-[24px] p-2 animate-in zoom-in-95 duration-700 border border-white/30">
         
-        <div className="flex flex-col items-center py-8">
-          <Logo size={64} className="mb-4" />
-          <h2 className="text-2xl font-semibold text-slate-900">
-            {isLogin ? 'Welcome Back' : 'Create Account'}
+        <div className="flex flex-col items-center py-12">
+          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Billdesk Pro
           </h2>
+          <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest mt-1">
+            {isLogin ? 'AUTHENTICATION' : 'REGISTRATION'}
+          </p>
         </div>
 
-        <div className="bg-white rounded-[12px] p-6 pb-10 shadow-none border border-slate-100">
+        <div className="bg-white rounded-[18px] p-6 pb-12 border border-slate-50">
           <form onSubmit={handleAuth} className="space-y-6">
             {error && (
               <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-[11px] rounded-[8px] font-semibold text-center animate-in fade-in slide-in-from-top-1">
@@ -87,7 +84,7 @@ const Auth = () => {
 
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Email Address</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase ml-1 tracking-widest">Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                   <input
@@ -95,14 +92,14 @@ const Auth = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-slate-200 rounded-[10px] outline-none focus:border-slate-400 font-medium text-slate-900 transition-all placeholder:text-slate-300 text-sm shadow-none"
-                    placeholder="Your Email Address"
+                    className="w-full pl-12 pr-4 py-3.5 bg-[#f9f9f9] border border-slate-200 rounded-[12px] outline-none focus:border-[#79ebff] focus:ring-0 font-medium text-slate-900 transition-all placeholder:text-slate-300 text-sm"
+                    placeholder="name@company.com"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Password</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase ml-1 tracking-widest">Security Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                   <input
@@ -110,8 +107,8 @@ const Auth = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-slate-200 rounded-[10px] outline-none focus:border-slate-400 font-medium text-slate-900 transition-all placeholder:text-slate-300 text-sm shadow-none"
-                    placeholder="Your Password"
+                    className="w-full pl-12 pr-4 py-3.5 bg-[#f9f9f9] border border-slate-200 rounded-[12px] outline-none focus:border-[#79ebff] focus:ring-0 font-medium text-slate-900 transition-all placeholder:text-slate-300 text-sm"
+                    placeholder="••••••••"
                   />
                 </div>
               </div>
@@ -121,20 +118,20 @@ const Auth = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 rounded-[10px] font-bold bg-[#ffea79] text-slate-900 hover:bg-[#f0db69] transition-all flex items-center justify-center disabled:opacity-50 text-[11px] tracking-[0.15em] border border-transparent active:scale-[0.98] shadow-none uppercase"
+                className="w-full py-4 rounded-[14px] font-bold bg-[#79ebff] text-slate-900 hover:bg-[#00d2f0] hover:text-white transition-all flex items-center justify-center disabled:opacity-50 text-[11px] tracking-[0.25em] border border-transparent uppercase active:scale-[0.98]"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : (isLogin ? 'SIGN IN' : 'REGISTER')} 
+                {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : (isLogin ? 'AUTHENTICATE' : 'REGISTER NOW')} 
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="w-full text-center text-[10px] text-slate-400 font-medium"
+                className="w-full text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest hover:text-primary-dark transition-colors"
               >
                 {isLogin ? (
-                  <>Don't have an account? <span className="text-[#38b6ff] font-bold uppercase ml-1">SIGN UP</span></>
+                  <>Don't have an account? <span className="text-[#00d2f0] ml-1">SIGN UP FREE</span></>
                 ) : (
-                  <>Already have an account? <span className="text-[#38b6ff] font-bold uppercase ml-1">LOGIN</span></>
+                  <>Already have an account? <span className="text-[#00d2f0] ml-1">SIGN IN</span></>
                 )}
               </button>
             </div>

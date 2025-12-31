@@ -9,22 +9,44 @@ interface LogoProps {
 const Logo: React.FC<LogoProps> = ({ className = '', size = 40 }) => {
   return (
     <div 
-      className={`relative flex items-center justify-center rounded-[10px] overflow-hidden bg-[#ffea79] shadow-sm ${className}`}
-      style={{ width: size, height: size }}
+      className={`relative flex items-center justify-center overflow-hidden rounded-[20%] ${className}`}
+      style={{ width: size, height: size, backgroundColor: '#79ebff' }}
     >
-      <div className="relative w-full h-full flex flex-col items-center justify-center pt-2">
-        <span className="text-slate-900 font-black leading-none select-none" style={{ fontSize: size * 0.5 }}>F</span>
-        <svg 
-          viewBox="0 0 100 40" 
-          className="absolute bottom-[12%] w-[60%] h-auto"
-          style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.1))' }}
+      <svg 
+        viewBox="0 0 100 100" 
+        className="w-[85%] h-[85%]"
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* The Letter B */}
+        <text 
+          x="50%" 
+          y="55%" 
+          dominantBaseline="middle" 
+          textAnchor="middle" 
+          fontSize="50" 
+          fontWeight="900" 
+          fill="white"
+          fontFamily="Arial, sans-serif"
         >
-          <path 
-            d="M5 5 C 20 25, 80 25, 95 5 L 85 15 L 90 2 L 75 8 Z" 
-            fill="#EF4444" 
-          />
-        </svg>
-      </div>
+          B
+        </text>
+        
+        {/* The Smile Arrow */}
+        <path 
+          d="M25 65 Q 50 85 75 65" 
+          stroke="#FACC15" 
+          strokeWidth="6" 
+          strokeLinecap="round" 
+        />
+        <path 
+          d="M70 62 L 78 65 L 72 73" 
+          fill="#FACC15" 
+          stroke="#FACC15" 
+          strokeWidth="2" 
+          strokeLinejoin="round" 
+        />
+      </svg>
     </div>
   );
 };

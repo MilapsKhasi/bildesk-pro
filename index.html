@@ -4,11 +4,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Findesk Prime | Your Digital Finance Desk</title>
+    <title>Billdesk Pro | Enterprise Finance Suite</title>
     <meta name="description" content="Cloud-synced purchase and stock management system." />
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%23ffea79%22/><text x=%2250%%22 y=%2252%%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%230F172A%22 style=%22font-size:52px;font-weight:800;font-family:sans-serif%22>F</text><path d=%22M25 65C35 80 65 80 75 65L82 72L84 55L68 58L75 65Z%22 fill=%22%23EF4444%22/></svg>">
+    <!-- Favicon using the new theme color -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2379ebff%22/><text y=%22.9em%22 font-size=%2280%22 x=%2250%%22 text-anchor=%22middle%22 font-family=%22Arial%22 fill=%22%230F172A%22 font-weight=%22bold%22>B</text></svg>">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -17,9 +17,9 @@
           extend: {
             colors: {
               primary: {
-                DEFAULT: '#ffea79',
-                dark: '#f0db69',
-                light: '#fff5bd'
+                DEFAULT: '#79ebff',
+                dark: '#00d2f0',
+                light: '#a6f2ff'   
               },
               link: '#38b6ff',
               slate: {
@@ -100,6 +100,19 @@
         border-bottom: 1px solid #F1F5F9;
         color: #334155;
       }
+
+      .splash-bg {
+        background: white;
+      }
+      
+      .bg-primary { background-color: #79ebff !important; }
+      .bg-primary-dark { background-color: #00d2f0 !important; }
+      .hover\:bg-primary-dark:hover { background-color: #00d2f0 !important; }
+      .text-primary-dark { color: #00d2f0 !important; }
+      .border-primary { border-color: #79ebff !important; }
+
+      /* Remove all box-shadows globally */
+      * { box-shadow: none !important; }
     </style>
   <script type="importmap">
 {

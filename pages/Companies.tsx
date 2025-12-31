@@ -17,26 +17,50 @@ const Companies = () => {
 
   const loadData = async () => {
     setLoading(true);
-    // Fetch companies locally
-    const { data } = await supabase.from('companies').select('*').eq('is_deleted', false).order('created_at', { ascending: false });
-    setCompanies(data || []);
+    // Fetch companies associated with the user via Supabase
+    const { data, error } = await supabase
+      .from('companies')
+      .select('*')
+      .eq('is_deleted', false)
+      .order('created_at', { ascending: false });
+      
+    if (!error) {
+      setCompanies(data || []);
+    }
     setLoading(false);
   };
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { 
+    loadData(); 
+  }, []);
 
   const handleCreateCompany = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCompany.name.trim()) return;
+    
     setCreating(true);
     try {
-      const { error } = await supabase.from('companies').insert([{ ...newCompany }]).select();
+      // 1. Get current authenticated user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error("Authentication required to create a workspace.");
+
+      // 2. Insert with user_id to satisfy RLS policy
+      const { error } = await supabase
+        .from('companies')
+        .insert([{ 
+          ...newCompany, 
+          user_id: user.id // Critical for RLS policies
+        }])
+        .select();
+
       if (error) throw error;
+
       setNewCompany({ name: '', gstin: '', address: '', state: '' });
       setIsModalOpen(false);
       await loadData();
     } catch (err: any) {
-      alert('Error creating workspace: ' + err.message);
+      console.error("Workspace creation failed:", err);
+      alert('Error creating workspace: ' + (err.message || "Operation failed. Please check your database permissions."));
     } finally {
       setCreating(false);
     }
@@ -80,7 +104,7 @@ const Companies = () => {
 
         <div className="flex items-center space-x-2">
           <div className="px-3 py-1 text-[10px] font-bold text-slate-400 border border-slate-100 rounded uppercase">
-            LOCAL MODE
+            CLOUD SYNC ACTIVE
           </div>
         </div>
       </header>
@@ -100,7 +124,7 @@ const Companies = () => {
           {loading ? (
             <div className="py-40 flex flex-col items-center justify-center">
               <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
-              <p className="text-slate-400 font-normal text-xs uppercase tracking-widest">Loading Local Workspaces...</p>
+              <p className="text-slate-400 font-normal text-xs uppercase tracking-widest">Loading Workspaces...</p>
             </div>
           ) : (
             <div className="border border-slate-200 rounded-md overflow-hidden bg-white">

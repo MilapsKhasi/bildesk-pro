@@ -5,12 +5,12 @@ import Sidebar from './Sidebar';
 import { Bell, Search, Settings as SettingsIcon, User, ChevronDown, Building2, LogOut, Plus, Check } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getActiveCompanyId } from '../utils/helpers';
-import Logo from './Logo';
 import Modal from './Modal';
 import VendorForm from './VendorForm';
 import StockForm from './StockForm';
 import BillForm from './BillForm';
 import Settings from '../pages/Settings';
+import Logo from './Logo';
 
 const Layout = () => {
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
@@ -24,7 +24,6 @@ const Layout = () => {
 
   const loadWorkspaces = async () => {
     try {
-      // Fetch workspaces locally via the mock supabase client
       const { data, error } = await supabase.from('companies').select('*').eq('is_deleted', false).order('created_at', { ascending: false });
       if (error) throw error;
       setWorkspaces(data || []);
@@ -60,8 +59,11 @@ const Layout = () => {
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden font-sans">
       <header className="h-16 border-b border-slate-200 flex items-center justify-between px-4 shrink-0 z-[100] bg-white">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <Logo size={32} />
+          <div className="bg-primary text-slate-900 px-3 py-1.5 rounded font-bold text-sm tracking-tight hidden md:block">
+            Billdesk Pro
+          </div>
           <div className="flex items-center px-3 py-1.5 border border-slate-200 rounded-md cursor-pointer hover:bg-slate-50" onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}>
             <span className="text-xs font-normal text-slate-700 uppercase tracking-tight mr-2">{activeWorkspace?.name || 'Select Account'}</span>
             <ChevronDown className="w-3 h-3 text-slate-400" />
@@ -94,7 +96,7 @@ const Layout = () => {
           {isAccountMenuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setIsAccountMenuOpen(false)}></div>
-              <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-slate-200 rounded-md shadow-lg z-20 py-2">
+              <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-slate-200 rounded-md z-20 py-2">
                 <div className="px-4 py-2 border-b border-slate-100 mb-1">
                   <p className="text-[10px] font-bold text-slate-400 uppercase">Profile</p>
                   <p className="text-xs text-slate-900 truncate">Local Offline User</p>
@@ -123,7 +125,6 @@ const Layout = () => {
         </main>
       </div>
 
-      {/* Global Settings Modal */}
       <Modal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} title="Global System Configuration" maxWidth="max-w-4xl">
           <Settings onDone={() => setIsSettingsModalOpen(false)} />
       </Modal>
