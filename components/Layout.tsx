@@ -61,9 +61,6 @@ const Layout = () => {
       <header className="h-16 border-b border-slate-200 flex items-center justify-between px-4 shrink-0 z-[100] bg-white">
         <div className="flex items-center space-x-3">
           <Logo size={32} />
-          <div className="bg-primary text-slate-900 px-3 py-1.5 rounded font-bold text-sm tracking-tight hidden md:block">
-            Billdesk Pro
-          </div>
           <div className="flex items-center px-3 py-1.5 border border-slate-200 rounded-md cursor-pointer hover:bg-slate-50" onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}>
             <span className="text-xs font-normal text-slate-700 uppercase tracking-tight mr-2">{activeWorkspace?.name || 'Select Account'}</span>
             <ChevronDown className="w-3 h-3 text-slate-400" />
